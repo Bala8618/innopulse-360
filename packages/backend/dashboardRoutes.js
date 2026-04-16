@@ -1,0 +1,117 @@
+const express = require('express');
+const auth = require('../middleware/auth');
+const role = require('../middleware/role');
+const participantController = require('../controllers/participantController');
+const mentorController = require('../controllers/mentorController');
+const juryController = require('../controllers/juryController');
+const adminController = require('../controllers/adminController');
+const managementController = require('../controllers/managementController');
+const reportTeamController = require('../controllers/reportTeamController');
+const rewardsTeamController = require('../controllers/rewardsTeamController');
+const commonController = require('../controllers/commonController');
+
+const router = express.Router();
+
+router.get('/participant/overview', auth, role('participant'), participantController.getOverview);
+router.get('/participant/events', auth, role('participant'), participantController.listAvailableEvents);
+router.get('/participant/open-events', auth, role('participant'), participantController.listOpenRegistrationEvents);
+router.get('/participant/registrations', auth, role('participant'), participantController.listRegistrations);
+router.post('/participant/registrations', auth, role('participant'), participantController.createRegistration);
+router.get('/participant/submissions', auth, role('participant'), participantController.listSubmissions);
+router.post('/participant/submissions', auth, role('participant'), participantController.createSubmission);
+router.get('/participant/travel', auth, role('participant'), participantController.listTravelRequests);
+router.post('/participant/travel', auth, role('participant'), participantController.createTravelRequest);
+router.get('/participant/accommodation', auth, role('participant'), participantController.listAccommodationRequests);
+router.post('/participant/accommodation', auth, role('participant'), participantController.createAccommodationRequest);
+router.get('/participant/food', auth, role('participant'), participantController.listFoodRequests);
+router.post('/participant/food', auth, role('participant'), participantController.createFoodRequest);
+router.get('/participant/notifications', auth, role('participant'), participantController.listNotifications);
+router.get('/participant/reports', auth, role('participant'), participantController.listReports);
+router.post('/participant/reports', auth, role('participant'), participantController.submitReport);
+router.get('/participant/mentors', auth, role('participant'), participantController.listMentors);
+router.get('/participant/mentor-approvals', auth, role('participant'), participantController.listMentorApprovals);
+router.post('/participant/mentor-approvals', auth, role('participant'), participantController.createMentorApproval);
+router.get('/participant/activity-points', auth, role('participant'), participantController.listActivityPointRequests);
+router.post('/participant/activity-points', auth, role('participant'), participantController.createActivityPointRequest);
+router.get('/participant/winners', auth, role('participant'), participantController.listWinners);
+router.get('/participant/reward-claims', auth, role('participant'), participantController.listRewardClaims);
+router.post('/participant/reward-claims', auth, role('participant'), participantController.createRewardClaim);
+router.get('/participant/report-templates', auth, role('participant'), participantController.listActiveReportTemplates);
+router.post('/participant/report-responses', auth, role('participant'), participantController.submitReportResponse);
+
+router.get('/mentor/overview', auth, role('mentor'), mentorController.getOverview);
+router.get('/mentor/assigned-teams', auth, role('mentor'), mentorController.getAssignedTeams);
+router.get('/mentor/session-logs', auth, role('mentor'), mentorController.getSessionLogs);
+router.get('/mentor/approvals', auth, role('mentor'), mentorController.getApprovalRequests);
+router.patch('/mentor/approvals/:id/status', auth, role('mentor'), mentorController.updateApprovalStatus);
+
+router.get('/jury/overview', auth, role('jury'), juryController.getOverview);
+router.get('/jury/evaluations', auth, role('jury'), juryController.getEvaluations);
+router.get('/jury/viva-records', auth, role('jury'), juryController.getVivaRecords);
+router.post('/jury/shortlist', auth, role('jury'), juryController.shortlistTeam);
+router.post('/jury/declare-winner', auth, role('jury'), juryController.declareWinner);
+
+router.get('/admin/overview', auth, role('admin'), adminController.getOverview);
+router.get('/admin/events', auth, role('admin'), adminController.eventList);
+router.post('/admin/events', auth, role('admin'), adminController.createEvent);
+router.patch('/admin/events/:id', auth, role('admin'), adminController.updateEvent);
+router.delete('/admin/events/:id', auth, role('admin'), adminController.deleteEvent);
+router.get('/admin/registrations', auth, role('admin'), adminController.registrationList);
+router.patch('/admin/registrations/:id/status', auth, role('admin'), adminController.updateRegistrationStatus);
+router.patch('/admin/registrations/bulk-approve', auth, role('admin'), adminController.bulkApproveRegistrations);
+router.get('/admin/shortlist', auth, role('admin'), adminController.shortlistList);
+router.post('/admin/shortlist', auth, role('admin'), adminController.shortlistTeam);
+router.get('/admin/teams', auth, role('admin'), adminController.teamList);
+router.get('/admin/travel', auth, role('admin'), adminController.travelList);
+router.patch('/admin/travel/:id/status', auth, role('admin'), adminController.updateTravelStatus);
+router.patch('/admin/travel/:id/approve', auth, role('admin'), adminController.approveTravel);
+router.get('/admin/accommodation', auth, role('admin'), adminController.accommodationList);
+router.post('/admin/accommodation', auth, role('admin'), adminController.allocateAccommodation);
+router.get('/admin/food', auth, role('admin'), adminController.foodList);
+router.post('/admin/food', auth, role('admin'), adminController.allocateFood);
+router.get('/admin/mentor-sessions', auth, role('admin'), adminController.mentorSessionsList);
+router.post('/admin/assign-mentor', auth, role('admin'), adminController.assignMentor);
+router.get('/admin/jury-evaluations', auth, role('admin'), adminController.juryEvaluationsList);
+router.post('/admin/assign-jury', auth, role('admin'), adminController.assignJury);
+router.post('/admin/evaluations', auth, role('admin'), adminController.recordEvaluation);
+router.get('/admin/submissions', auth, role('admin'), adminController.submissionList);
+router.get('/admin/domain-analytics', auth, role('admin'), adminController.domainAnalyticsList);
+router.get('/admin/leaderboard', auth, role('admin'), adminController.leaderboardList);
+router.get('/admin/winners', auth, role('admin'), adminController.winnerList);
+router.post('/admin/winners', auth, role('admin'), adminController.declareWinner);
+router.patch('/admin/winners/:id', auth, role('admin'), adminController.updateWinner);
+router.delete('/admin/winners/:id', auth, role('admin'), adminController.deleteWinner);
+router.get('/admin/reports', auth, role('admin'), adminController.reportList);
+router.get('/admin/event-rankings', auth, role('admin'), adminController.eventRankingList);
+router.get('/admin/users', auth, role('admin'), adminController.userList);
+router.get('/admin/audit-logs', auth, role('admin'), adminController.auditLogs);
+router.get('/admin/notifications', auth, role('admin'), adminController.notificationList);
+router.get('/admin/mentor-approvals', auth, role('admin'), adminController.mentorApprovalList);
+router.get('/admin/activity-points', auth, role('admin'), adminController.activityPointList);
+router.patch('/admin/activity-points/:id/status', auth, role('admin'), adminController.updateActivityPointStatus);
+router.get('/admin/reward-claims', auth, role('admin'), adminController.rewardClaimList);
+router.patch('/admin/reward-claims/:id/status', auth, role('admin'), adminController.updateRewardClaimStatus);
+router.get('/admin/mentors', auth, role('admin'), adminController.mentorUserList);
+
+router.get('/management/overview', auth, role('management'), managementController.getOverview);
+router.get('/management/travel', auth, role('management'), managementController.travelList);
+router.patch('/management/travel/:id/status', auth, role('management'), managementController.updateTravelStatus);
+router.get('/management/accommodation', auth, role('management'), managementController.accommodationList);
+router.patch('/management/accommodation/:id/status', auth, role('management'), managementController.updateAccommodationStatus);
+router.get('/management/food', auth, role('management'), managementController.foodList);
+router.patch('/management/food/:id/status', auth, role('management'), managementController.updateFoodStatus);
+
+router.get('/report-team/overview', auth, role('report_team'), reportTeamController.getOverview);
+router.get('/report-team/templates', auth, role('report_team'), reportTeamController.listTemplates);
+router.post('/report-team/templates', auth, role('report_team'), reportTeamController.createTemplate);
+router.get('/report-team/responses', auth, role('report_team'), reportTeamController.listResponses);
+
+router.get('/rewards-team/overview', auth, role('rewards_team'), rewardsTeamController.getOverview);
+router.get('/rewards-team/reward-claims', auth, role('rewards_team'), rewardsTeamController.rewardClaimList);
+router.patch('/rewards-team/reward-claims/:id/status', auth, role('rewards_team'), rewardsTeamController.updateRewardClaimStatus);
+router.get('/rewards-team/activity-points', auth, role('rewards_team'), rewardsTeamController.activityPointList);
+router.patch('/rewards-team/activity-points/:id/status', auth, role('rewards_team'), rewardsTeamController.updateActivityPointStatus);
+
+router.get('/notifications/my', auth, commonController.myNotifications);
+
+module.exports = router;
